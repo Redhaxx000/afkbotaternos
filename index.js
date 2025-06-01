@@ -3,21 +3,32 @@ const mineflayer = require('mineflayer');
 // 🟢 Start AFK bot
 function startBot() {
   const bot = mineflayer.createBot({
-    host: 'vanirmcpe.aternos.me', // 🔁 Replace with your Aternos server IP
-    port: 20540,                    // 🔁 Replace with the Java server port from Aternos
-    username: 'vanir',         // Change if needed
-    auth: 'offline',                // Use 'offline' for cracked servers
-    version: '1.21.4'               // Must match your Aternos version
+    host: 'vanirmcpe.aternos.me',
+    port: 20540,
+    username: 'vanir',
+    auth: 'offline',
+    version: '1.21.4' // make sure this matches your server version
   });
 
   bot.once('spawn', () => {
     console.log('✅ Bot has joined the server.');
 
-    // Basic AFK behavior: jump every 10 sec
+    // Jump every 10 seconds
     setInterval(() => {
       bot.setControlState('jump', true);
       setTimeout(() => bot.setControlState('jump', false), 500);
     }, 10000);
+
+    // Walk forward for 2 seconds every 30 seconds
+    setInterval(() => {
+      bot.setControlState('forward', true);
+      setTimeout(() => bot.setControlState('forward', false), 2000);
+    }, 30000);
+
+    // Chat a keep-alive message every 5 minutes
+    setInterval(() => {
+      bot.chat('Caught a player cheat? make a ticket in our discord to report them! discord.gg/vanir');
+    }, 300000);
   });
 
   bot.on('end', () => {
