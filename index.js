@@ -3,54 +3,54 @@ const http = require('http');
 
 function startBot() {
   const bot = mineflayer.createBot({
-    host: 'vanirmcpe.aternos.me',
-    port: 20540,
-    username: 'Vanir',       // looks like a real player
-    auth: 'offline',
-    version: false            // auto-detect version
+    host: 'vanirmcpe.aternos.me',  // Replace with your Aternos IP
+    port: 20540,                   // Aternos Java port (not Bedrock)
+    username: 'Vanir_',            // Use a normal-looking name
+    auth: 'offline',               // Offline server
+    version: false                 // Auto-detect version (1.21.5 compatible)
   });
 
   bot.once('spawn', () => {
-    console.log('✅ Vanir_ joined and is AFK.');
+    console.log('✅ Vanir_ joined and is AFK-safe.');
 
-    // 🔄 Subtle anti-AFK movements
+    // Walk forward for 1s every 30s
+    setInterval(() => {
+      bot.setControlState('forward', true);
+      setTimeout(() => bot.setControlState('forward', false), 1000);
+    }, 30000);
+
+    // Jump every 45s
     setInterval(() => {
       bot.setControlState('jump', true);
       setTimeout(() => bot.setControlState('jump', false), 500);
+    }, 45000);
 
-      // Random look direction
-      const yaw = Math.random() * Math.PI * 2;
-      const pitch = (Math.random() - 0.5) * Math.PI;
-      bot.look(yaw, pitch, true);
-    }, 60000); // every 60 seconds
-
-    // 💬 Optional: send a non-bot-looking chat message occasionally
+    // Chat every 5 minutes
     setInterval(() => {
-      const msgs = ['Caught a cheater? Report them in our discord server!', 'ok', 'discord.gg/vanir', 'yo', 'nice'];
-      bot.chat(msgs[Math.floor(Math.random() * msgs.length)]);
-    }, 5 * 60 * 1000); // every 5 minutes
+      bot.chat('discord.gg/vanir 👀');
+    }, 300000);
+  });
+
+  bot.on('kicked', reason => {
+    console.log('❌ Kicked:', reason);
   });
 
   bot.on('end', () => {
-    console.warn('⚠️ Disconnected. Reconnecting in 10 seconds...');
+    console.log('🔁 Disconnected. Reconnecting in 10s...');
     setTimeout(startBot, 10000);
   });
 
-  bot.on('kicked', (reason) => {
-    console.warn('❌ Kicked:', reason);
-  });
-
-  bot.on('error', (err) => {
-    console.error('❌ Error:', err.message);
+  bot.on('error', err => {
+    console.log('❌ Bot error:', err.message);
   });
 }
 
 startBot();
 
-// 🌐 Keep Render.com project alive
+// 🔁 Prevent Render.com shutdown (fake web server)
 http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('AFK bot is active.\n');
-}).listen(process.env.PORT || 3000, () => {
-  console.log(`🌐 Web server running on port ${process.env.PORT || 3000}`);
-});
+  res.writeHead(200);
+  res.end('Bot running.');
+}).listen(process.env.PORT || 3000, () =>
+  console.log(`🌐 Web server running on port ${process.env.PORT || 3000}`)
+);
