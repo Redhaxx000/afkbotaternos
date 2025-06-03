@@ -1,11 +1,11 @@
 {
-  "name": "vanir-afk-bot",
+  "name": "afk-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "mineflayer": "github:PrismarineJS/mineflayer"
+    "mineflayer": "^4.15.0"
   }
 }
